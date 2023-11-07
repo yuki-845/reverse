@@ -1,0 +1,6 @@
+{
+  "firestore": {
+    "rules": "Which Firebase features do you want to set up for this directory? Press Space to select features, then Enter ",
+    "indexes": "firestore.indexes.json"
+  }
+}
