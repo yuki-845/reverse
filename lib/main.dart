@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -64,16 +66,29 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
+  List<List<String>> list = [
+    ["", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", ""],
+    ["", "", "", "◯", "●", "", "", ""],
+    ["", "", "", "●", "◯", "", "", ""],
+    ["", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", ""]
+  ];
+  bool flag = true;
+  int count = 0;
+  void _incrementCounter(int x, int y) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      if (count % 2 == 0) {
+        list[x][y] = "●";
+      } else {
+        list[x][y] = "◯";
+      }
+      if (kDebugMode) {
+        print(x);
+      }
+      count++;
     });
   }
 
@@ -103,14 +118,27 @@ class _MyHomePageState extends State<MyHomePage> {
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
         ),
-        body: Column(
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  print("ぶっばS");
-                },
-                child: Text("N"))
-          ],
+        body: Center(
+          child: Column(
+            children: List.generate(8, (row) {
+              return Row(
+                children: List.generate(8, (col) {
+                  return SizedBox(
+                    height: 50,
+                    width: 45,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (list[row][col] == "") {
+                          _incrementCounter(row, col);
+                        } else {}
+                      },
+                      child: Text(list[row][col]),
+                    ),
+                  );
+                }),
+              );
+            }),
+          ),
         ));
   }
 }
