@@ -66,27 +66,53 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<List<String>> list = [
-    ["", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", ""],
-    ["", "", "", "◯", "●", "", "", ""],
-    ["", "", "", "●", "◯", "", "", ""],
-    ["", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", ""]
+  // 1:白 0:黒 -1:空白
+  List<List<int>> list = [
+    [-1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, 1, 0, -1, -1, -1],
+    [-1, -1, -1, 0, 1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1]
   ];
   bool flag = true;
   int count = 0;
+
   void _incrementCounter(int x, int y) {
     setState(() {
-      if (count % 2 == 0) {
-        list[x][y] = "●";
-      } else {
-        list[x][y] = "◯";
-      }
-      if (kDebugMode) {
-        print(x);
+      //                      上      下     右    左    右上    左上   右下    左下
+      List<List<int>> dir = [
+        [-1, 0],
+        [1, 0],
+        [0, -1],
+        [0, 1],
+        [-1, -1],
+        [-1, 1],
+        [1, -1],
+        [1, 1]
+      ];
+
+      for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+          for (int k = 0; k < 8; k++) {
+            int x = i;
+            int y = j;
+            int playerDisc = count % 2;
+            while (true) {
+              x += dir[k][0];
+              y += dir[k][1];
+              // ignore: unrelated_type_equality_checks
+              if (x < 0 || x > 7 || y < 0 || y > 7 || list[x][y] == -1) {
+                break;
+              }
+              if (list[x][y] == playerDisc) {
+                list[x][y] = 10;
+              }
+            }
+          }
+        }
       }
       count++;
     });
@@ -128,11 +154,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 45,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (list[row][col] == "") {
-                          _incrementCounter(row, col);
-                        } else {}
+                        _incrementCounter(row, col);
                       },
-                      child: Text(list[row][col]),
+                      child: ifText(list[row][col]),
                     ),
                   );
                 }),
@@ -140,5 +164,15 @@ class _MyHomePageState extends State<MyHomePage> {
             }),
           ),
         ));
+  }
+
+  Widget ifText(int value) {
+    if (value == -1) {
+      return const Text("");
+    } else if (value == 0) {
+      return const Text("●");
+    } else {
+      return const Text("◯");
+    }
   }
 }
