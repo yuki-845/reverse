@@ -77,6 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
     [-1, -1, -1, -1, -1, -1, -1, -1],
     [-1, -1, -1, -1, -1, -1, -1, -1]
   ];
+  // ignore: non_constant_identifier_names
+  Map<String, List<String>> TogglePlaceDisc = {};
   bool flag = true;
   int count = 0;
 
@@ -100,44 +102,74 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }
       }
-      list[a][b] = count % 2;
+      if (a != -1 && b != -1) {
+        list[a][b] = (count + 1) % 2;
+        // ignore: unrelated_type_equality_checks
+        if (TogglePlaceDisc["$a,$b"] != Null) {
+          for (int i = 0; i < TogglePlaceDisc["$a,$b"]!.length; i++) {
+            List<String> X = TogglePlaceDisc["$a,$b"]![i].split(',');
+            list[int.parse(X[0])][int.parse(X[1])] =
+                list[int.parse(X[0])][int.parse(X[1])] ^ 1;
+          }
+        }
+      }
+      TogglePlaceDisc.clear();
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
+          List<String> globalToggleDisc = [];
           if (list[i][j] == -1 || list[i][j] == 10) {
             for (int k = 0; k < 8; k++) {
               int x = i;
               int y = j;
-              int playerDisc = count % 2;
-              int noPlayerCount = 0;
+              // ignore: non_constant_identifier_names
+              int EnemyPlayerDisc = count % 2;
+              // ignore: non_constant_identifier_names
+              int PlayerCount = 0;
+              List<String> localToggleDisc = [];
               while (true) {
                 x += dir[k][0];
                 y += dir[k][1];
+
                 if (x >= 0 && x < 8 && y >= 0 && y < 8) {
-                  if (i == 2 && j == 5) {
-                    print("$x,$y");
-                    print(noPlayerCount);
-                  }
-                  if (playerDisc == list[x][y] && noPlayerCount > 0) {
+                  if (EnemyPlayerDisc == list[x][y] && PlayerCount > 0) {
                     list[i][j] = 10;
                     break;
                   }
                   if (list[x][y] == -1 ||
                       list[x][y] == 10 ||
-                      playerDisc == list[x][y]) break;
-                  noPlayerCount++;
+                      EnemyPlayerDisc == list[x][y]) {
+                    localToggleDisc = [];
+                    break;
+                  }
+                  PlayerCount++;
+                  localToggleDisc.add("$x,$y");
                 } else {
                   break;
                 }
               }
+
+              if (localToggleDisc.isNotEmpty) {
+                globalToggleDisc.addAll(localToggleDisc);
+              }
             }
+          }
+          if (globalToggleDisc.isNotEmpty) {
+            TogglePlaceDisc["$i,$j"] = globalToggleDisc;
           }
         }
       }
+      print(TogglePlaceDisc);
       count++;
     });
   }
 
   final TextEditingController _controller = TextEditingController();
+  @override
+  void initState() {
+    _incrementCounter(-1, -1);
+
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -170,11 +202,21 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: List.generate(8, (col) {
                   return SizedBox(
                     height: 50,
-                    width: 45,
+                    width: 50,
                     child: ElevatedButton(
                       onPressed: () {
                         _incrementCounter(row, col);
                       },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                              0), // ここの値を調整して四角形の角の丸みを変更できます
+                        ),
+                        side: const BorderSide(
+                          color: Colors.black, //色
+                          width: 0.4, //太さ
+                        ),
+                      ),
                       child: ifText(list[row][col]),
                     ),
                   );
@@ -184,16 +226,16 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ));
   }
+}
 
-  Widget ifText(int value) {
-    if (value == -1) {
-      return const Text("");
-    } else if (value == 0) {
-      return const Text("●");
-    } else if (value == 10) {
-      return const Text("俺");
-    } else {
-      return const Text("◯");
-    }
+Widget ifText(int value) {
+  if (value == -1) {
+    return const Text("");
+  } else if (value == 0) {
+    return const Text("●");
+  } else if (value == 10) {
+    return const Text("俺");
+  } else {
+    return const Text("◯");
   }
 }
