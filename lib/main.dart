@@ -80,7 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool flag = true;
   int count = 0;
 
-  void _incrementCounter(int x, int y) {
+  void _incrementCounter(int a, int b) {
     setState(() {
       //                      上      下     右    左    右上    左上   右下    左下
       List<List<int>> dir = [
@@ -93,22 +93,41 @@ class _MyHomePageState extends State<MyHomePage> {
         [1, -1],
         [1, 1]
       ];
-
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-          for (int k = 0; k < 8; k++) {
-            int x = i;
-            int y = j;
-            int playerDisc = count % 2;
-            while (true) {
-              x += dir[k][0];
-              y += dir[k][1];
-              // ignore: unrelated_type_equality_checks
-              if (x < 0 || x > 7 || y < 0 || y > 7 || list[x][y] == -1) {
-                break;
-              }
-              if (list[x][y] == playerDisc) {
-                list[x][y] = 10;
+          if (list[i][j] == 10) {
+            list[i][j] = -1;
+          }
+        }
+      }
+      list[a][b] = count % 2;
+      for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+          if (list[i][j] == -1 || list[i][j] == 10) {
+            for (int k = 0; k < 8; k++) {
+              int x = i;
+              int y = j;
+              int playerDisc = count % 2;
+              int noPlayerCount = 0;
+              while (true) {
+                x += dir[k][0];
+                y += dir[k][1];
+                if (x >= 0 && x < 8 && y >= 0 && y < 8) {
+                  if (i == 2 && j == 5) {
+                    print("$x,$y");
+                    print(noPlayerCount);
+                  }
+                  if (playerDisc == list[x][y] && noPlayerCount > 0) {
+                    list[i][j] = 10;
+                    break;
+                  }
+                  if (list[x][y] == -1 ||
+                      list[x][y] == 10 ||
+                      playerDisc == list[x][y]) break;
+                  noPlayerCount++;
+                } else {
+                  break;
+                }
               }
             }
           }
@@ -171,6 +190,8 @@ class _MyHomePageState extends State<MyHomePage> {
       return const Text("");
     } else if (value == 0) {
       return const Text("●");
+    } else if (value == 10) {
+      return const Text("俺");
     } else {
       return const Text("◯");
     }
