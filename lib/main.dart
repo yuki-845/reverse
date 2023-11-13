@@ -61,18 +61,30 @@ class MyApp extends StatelessWidget {
 }
 
 // ignore: duplicate_ignore
-void search(List<List<int>> list) {
-  int _blackdisc = 0;
+void search(Map<String, List<String>> map, List<List<int>> _disclist) {
   // ignore: no_leading_underscores_for_local_identifiers
-  int _whitedisc = 0;
-  for (int i = 0; i < 8; i++) {
-    for (int j = 0; j < 8; j++) {
-      if (list[i][j] == 0) {
-        _blackdisc += WeightOsero[i][j];
-      } else if (list[i][j] == 1) {
-        _whitedisc += WeightOsero[i][j];
+
+  for (var value in map.values) {
+    // ignore: non_constant_identifier_names
+
+    for (int i = 0; i < value.length; i++) {
+      List<String> X = value[i].split(',');
+      _disclist[int.parse(X[0])][int.parse(X[1])] =
+          _disclist[int.parse(X[0])][int.parse(X[1])] ^ 1;
+    }
+
+    int _whitedisc = 0;
+    int _blackdisc = 0;
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        if (_disclist[i][j] == 1) {
+          _whitedisc += WeightOsero[i][j];
+        } else if (_disclist[i][j] == 0) {
+          _blackdisc += WeightOsero[i][j];
+        }
       }
     }
+    print(_whitedisc - _blackdisc);
   }
 }
 
@@ -122,6 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }
       }
+
       if (a != -1 && b != -1) {
         list[a][b] = (count + 1) % 2;
         // ignore: unrelated_type_equality_checks
@@ -178,6 +191,15 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }
       }
+
+      if (count % 2 == 1) {
+        // ignore: non_constant_identifier_names
+        List<List<int>> Disclist =
+            List.from(list.map((list) => List.from(list))).cast<List<int>>();
+
+        // ディープコピーの作成方法2: List.map() を使用
+        search(TogglePlaceDisc, Disclist);
+      }
       print(TogglePlaceDisc);
       count++;
     });
@@ -197,14 +219,18 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  double? _deviceWidth, _deviceHeight;
   @override
   Widget build(BuildContext context) {
+    _deviceWidth = MediaQuery.of(context).size.width;
+    _deviceHeight = MediaQuery.of(context).size.height;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return Scaffold(
         appBar: AppBar(
           // TRY THIS: Try changing the color here to a specific color (to
@@ -221,8 +247,8 @@ class _MyHomePageState extends State<MyHomePage> {
               return Row(
                 children: List.generate(8, (col) {
                   return SizedBox(
-                    height: 50,
-                    width: 50,
+                    height: _deviceWidth! * 0.98 / 8,
+                    width: _deviceWidth! * 0.98 / 8,
                     child: ElevatedButton(
                       onPressed: () {
                         if (list[row][col] == -1 ||
