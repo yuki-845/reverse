@@ -205,9 +205,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        _incrementCounter(row, col);
+                        if (list[row][col] == -1 ||
+                            list[row][col] == 1 ||
+                            return;
+                        } else {
+                          _incrementCounter(row, col);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                               0), // ここの値を調整して四角形の角の丸みを変更できます
