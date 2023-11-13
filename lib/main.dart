@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable, no_leading_underscores_for_local_identifiers, duplicate_ignore
+
 import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
@@ -5,6 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+// ignore: constant_identifier_names
+const List<List<int>> WeightOsero = [
+  [30, -12, 0, -1, -1, 0, -12, 30],
+  [-12, -15, -3, -3, -3, -3, -15, -12],
+  [0, -3, 0, -1, -1, 0, -3, 0],
+  [-1, -3, -1, -1, -1, -1, -3, -1],
+  [-1, -3, -1, -1, -1, -1, -3, -1],
+  [0, -3, 0, -1, -1, 0, -3, 0],
+  [-12, -15, -3, -3, -3, -3, -15, -12],
+  [30, -12, 0, -1, -1, 0, -12, 30],
+];
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,17 +60,24 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// ignore: duplicate_ignore
+void search(List<List<int>> list) {
+  int _blackdisc = 0;
+  // ignore: no_leading_underscores_for_local_identifiers
+  int _whitedisc = 0;
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 8; j++) {
+      if (list[i][j] == 0) {
+        _blackdisc += WeightOsero[i][j];
+      } else if (list[i][j] == 1) {
+        _whitedisc += WeightOsero[i][j];
+      }
+    }
+  }
+}
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -241,7 +262,7 @@ Widget ifText(int value) {
   } else if (value == 0) {
     return const Text("●");
   } else if (value == 10) {
-    return const Text("俺");
+    return const Text("ハゲ");
   } else {
     return const Text("◯");
   }
