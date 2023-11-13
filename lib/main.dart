@@ -207,7 +207,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: () {
                         if (list[row][col] == -1 ||
                             list[row][col] == 1 ||
-                            return;
+                            list[row][col] == 0) {
+                          return;
                         } else {
                           _incrementCounter(row, col);
                         }
