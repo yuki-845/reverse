@@ -69,20 +69,12 @@ void search(Map<String, List<String>> map, List<List<int>> _disclist) {
 
     for (int i = 0; i < value.length; i++) {
       List<String> X = value[i].split(',');
-      _disclist[int.parse(X[0])][int.parse(X[1])] =
-          _disclist[int.parse(X[0])][int.parse(X[1])] ^ 1;
     }
 
     int _whitedisc = 0;
     int _blackdisc = 0;
     for (int i = 0; i < 8; i++) {
-      for (int j = 0; j < 8; j++) {
-        if (_disclist[i][j] == 1) {
-          _whitedisc += WeightOsero[i][j];
-        } else if (_disclist[i][j] == 0) {
-          _blackdisc += WeightOsero[i][j];
-        }
-      }
+      for (int j = 0; j < 8; j++) {}
     }
     print(_whitedisc - _blackdisc);
   }
@@ -199,6 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         // ディープコピーの作成方法2: List.map() を使用
         search(TogglePlaceDisc, Disclist);
+        print(Disclist.runtimeType);
       }
       print(TogglePlaceDisc);
       count++;
