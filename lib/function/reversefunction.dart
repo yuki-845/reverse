@@ -103,7 +103,6 @@ String search(Map<String, List<String>> map, List<List<int>> disclist) {
     }
     int whitedisc = 0;
     int blackdisc = 0;
-    print(Disclist);
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         if (Disclist[i][j] == 1) {
@@ -113,13 +112,10 @@ String search(Map<String, List<String>> map, List<List<int>> disclist) {
         }
       }
     }
-
-    print(whitedisc - blackdisc);
     if ((whitedisc - blackdisc) > _maxitem) {
       answer = key;
       _maxitem = (whitedisc - blackdisc);
     }
   }
-  print(answer);
   return answer;
 }

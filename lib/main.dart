@@ -79,8 +79,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter(int a, int b) {
     setState(() {
-      //                      上      下     右    左    右上    左上   右下    左下
-
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
           if (list[i][j] == 10) {
@@ -88,77 +86,20 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }
       }
-
+      //コマが置けるところを見つける。
+      TogglePlaceDisc.clear();
+      findPlacesDisc(list, TogglePlaceDisc, 0);
+      print(TogglePlaceDisc);
       if (a != -1 && b != -1) {
         list[a][b] = (count + 1) % 2;
         // ignore: unrelated_type_equality_checks
         if (TogglePlaceDisc["$a,$b"] != Null) {
-          for (int i = 0; i < TogglePlaceDisc["$a,$b"]!.length; i++) {
-            List<String> X = TogglePlaceDisc["$a,$b"]![i].split(',');
-            list[int.parse(X[0])][int.parse(X[1])] =
-                list[int.parse(X[0])][int.parse(X[1])] ^ 1;
-          }
+          turnOver(TogglePlaceDisc, list, a, b);
         }
       }
-      TogglePlaceDisc.clear();
-      for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-          List<String> globalToggleDisc = [];
-          if (list[i][j] == -1 || list[i][j] == 10) {
-            for (int k = 0; k < 8; k++) {
-              int x = i;
-              int y = j;
-              // ignore: non_constant_identifier_names
-              int EnemyPlayerDisc = count % 2;
-              // ignore: non_constant_identifier_names
-              int PlayerCount = 0;
-              List<String> localToggleDisc = [];
-              while (true) {
-                x += dir[k][0];
-                y += dir[k][1];
 
-                if (x >= 0 && x < 8 && y >= 0 && y < 8) {
-                  if (EnemyPlayerDisc == list[x][y] && PlayerCount > 0) {
-                    list[i][j] = 10;
-                    break;
-                  }
-                  if (list[x][y] == -1 ||
-                      list[x][y] == 10 ||
-                      EnemyPlayerDisc == list[x][y]) {
-                    localToggleDisc = [];
-                    break;
-                  }
-                  PlayerCount++;
-                  localToggleDisc.add("$x,$y");
-                } else {
-                  break;
-                }
-              }
-
-              if (localToggleDisc.isNotEmpty) {
-                globalToggleDisc.addAll(localToggleDisc);
-              }
-            }
-          }
-          if (globalToggleDisc.isNotEmpty) {
-            TogglePlaceDisc["$i,$j"] = globalToggleDisc;
-          }
-        }
-      }
       print(count);
-      if (count % 2 == 1) {
-        // ignore: non_constant_identifier_names
 
-        // ディープコピーの作成方法2: List.map() を使用
-        String cpuDisc = search(TogglePlaceDisc, list);
-        List<String> Y = cpuDisc.split(",");
-        list[int.parse(Y[0])][int.parse(Y[1])] = 1;
-        for (int i = 0; i < TogglePlaceDisc[cpuDisc]!.length; i++) {
-          List<String> X = TogglePlaceDisc[cpuDisc]![i].split(",");
-          list[int.parse(X[0])][int.parse(X[1])] = 1;
-        }
-        count += 1;
-      }
       count++;
     });
   }
