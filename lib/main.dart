@@ -1,24 +1,13 @@
-// ignore_for_file: unused_local_variable, no_leading_underscores_for_local_identifiers, duplicate_ignore
+// ignore_for_file: unused_local_variable, no_leading_underscores_for_local_identifiers, duplicate_ignore, non_constant_identifier_names
 
 import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:reverse/function/reversefunction.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-// ignore: constant_identifier_names
-const List<List<int>> WeightOsero = [
-  [30, -12, 0, -1, -1, 0, -12, 30],
-  [-12, -15, -3, -3, -3, -3, -15, -12],
-  [0, -3, 0, -1, -1, 0, -3, 0],
-  [-1, -3, -1, -1, -1, -1, -3, -1],
-  [-1, -3, -1, -1, -1, -1, -3, -1],
-  [0, -3, 0, -1, -1, 0, -3, 0],
-  [-12, -15, -3, -3, -3, -3, -15, -12],
-  [30, -12, 0, -1, -1, 0, -12, 30],
-];
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,24 +50,6 @@ class MyApp extends StatelessWidget {
 }
 
 // ignore: duplicate_ignore
-void search(Map<String, List<String>> map, List<List<int>> _disclist) {
-  // ignore: no_leading_underscores_for_local_identifiers
-
-  for (var value in map.values) {
-    // ignore: non_constant_identifier_names
-
-    for (int i = 0; i < value.length; i++) {
-      List<String> X = value[i].split(',');
-    }
-
-    int _whitedisc = 0;
-    int _blackdisc = 0;
-    for (int i = 0; i < 8; i++) {
-      for (int j = 0; j < 8; j++) {}
-    }
-    print(_whitedisc - _blackdisc);
-  }
-}
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -109,16 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter(int a, int b) {
     setState(() {
       //                      上      下     右    左    右上    左上   右下    左下
-      List<List<int>> dir = [
-        [-1, 0],
-        [1, 0],
-        [0, -1],
-        [0, 1],
-        [-1, -1],
-        [-1, 1],
-        [1, -1],
-        [1, 1]
-      ];
+
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
           if (list[i][j] == 10) {
@@ -183,17 +145,20 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }
       }
-
+      print(count);
       if (count % 2 == 1) {
         // ignore: non_constant_identifier_names
-        List<List<int>> Disclist =
-            List.from(list.map((list) => List.from(list))).cast<List<int>>();
 
         // ディープコピーの作成方法2: List.map() を使用
-        search(TogglePlaceDisc, Disclist);
-        print(Disclist.runtimeType);
+        String cpuDisc = search(TogglePlaceDisc, list);
+        List<String> Y = cpuDisc.split(",");
+        list[int.parse(Y[0])][int.parse(Y[1])] = 1;
+        for (int i = 0; i < TogglePlaceDisc[cpuDisc]!.length; i++) {
+          List<String> X = TogglePlaceDisc[cpuDisc]![i].split(",");
+          list[int.parse(X[0])][int.parse(X[1])] = 1;
+        }
+        count += 1;
       }
-      print(TogglePlaceDisc);
       count++;
     });
   }
@@ -202,7 +167,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     _incrementCounter(-1, -1);
-
     super.initState();
   }
 
