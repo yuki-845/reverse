@@ -29,6 +29,7 @@ void findPlacesDisc(
     // ignore: non_constant_identifier_names
     Map<String, List<String>> TogglePlaceDisc,
     int disc) {
+  TogglePlaceDisc.clear();
   List<List<int>> dir = [
     [-1, 0],
     [1, 0],

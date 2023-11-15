@@ -73,7 +73,8 @@ class _MyHomePageState extends State<MyHomePage> {
     [-1, -1, -1, -1, -1, -1, -1, -1]
   ];
   // ignore: non_constant_identifier_names
-  Map<String, List<String>> TogglePlaceDisc = {};
+  Map<String, List<String>> WhitePlaceDisc = {};
+  Map<String, List<String>> BlackPlaceDisc = {};
   bool flag = true;
   int count = 0;
 
@@ -86,17 +87,31 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }
       }
-      //コマが置けるところを見つける。
-      TogglePlaceDisc.clear();
-      findPlacesDisc(list, TogglePlaceDisc, 0);
-      print(TogglePlaceDisc);
-      if (a != -1 && b != -1) {
-        list[a][b] = (count + 1) % 2;
-        // ignore: unrelated_type_equality_checks
-        if (TogglePlaceDisc["$a,$b"] != Null) {
-          turnOver(TogglePlaceDisc, list, a, b);
-        }
-      }
+      print(BlackPlaceDisc);
+      //黒のコマをひっくり返す
+      list[a][b] = 0;
+      turnOver(BlackPlaceDisc, list, a, b);
+      // 白のコマが置けるところを見つける。
+      // WhitePlaceDisc.clear();
+      findPlacesDisc(list, WhitePlaceDisc, 1);
+      //リストのヒープコピーを作る。
+
+      //評価関数によって最適なますを考える
+      String whiteDisc = search(WhitePlaceDisc, list);
+      List<String> X = whiteDisc.split(',');
+      //白がCPU(仮)なのでここで白のコマをひっくり返す
+      turnOver(WhitePlaceDisc, list, int.parse(X[0]), int.parse(X[1]));
+
+      findPlacesDisc(list, BlackPlaceDisc, 0);
+
+      // print(TogglePlaceDisc);
+      // if (a != -1 && b != -1) {
+      //   list[a][b] = (count + 1) % 2;
+      //   // ignore: unrelated_type_equality_checks
+      //   if (TogglePlaceDisc["$a,$b"] != Null) {
+      //     turnOver(TogglePlaceDisc, list, a, b);
+      //   }
+      // }
 
       print(count);
 
@@ -107,7 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _controller = TextEditingController();
   @override
   void initState() {
-    _incrementCounter(-1, -1);
+    findPlacesDisc(list, BlackPlaceDisc, 0);
     super.initState();
   }
 
