@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
           }
         }
       }
-      print(BlackPlaceDisc);
+
       //黒のコマをひっくり返す
       list[a][b] = 0;
       turnOver(BlackPlaceDisc, list, a, b);
