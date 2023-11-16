@@ -1,7 +1,7 @@
 // ignore_for_file: unused_local_variable, no_leading_underscores_for_local_identifiers, duplicate_ignore, non_constant_identifier_names
 
 import 'dart:ffi';
-
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:reverse/function/reversefunction.dart';
@@ -91,29 +91,46 @@ class _MyHomePageState extends State<MyHomePage> {
       //黒のコマをひっくり返す
       list[a][b] = 0;
       turnOver(BlackPlaceDisc, list, a, b);
+
       // 白のコマが置けるところを見つける。
-      // WhitePlaceDisc.clear();
+      WhitePlaceDisc.clear();
+      for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+          if (list[i][j] == 10) {
+            list[i][j] = -1;
+          }
+        }
+      }
       findPlacesDisc(list, WhitePlaceDisc, 1);
-      //リストのヒープコピーを作る。
 
       //評価関数によって最適なますを考える
       String whiteDisc = search(WhitePlaceDisc, list);
       List<String> X = whiteDisc.split(',');
-      //白がCPU(仮)なのでここで白のコマをひっくり返す
-      turnOver(WhitePlaceDisc, list, int.parse(X[0]), int.parse(X[1]));
+      print(X);
 
+      //白がCPU(仮)なのでここで白のコマをひっくり返す
+      list[int.parse(X[0])][int.parse(X[1])] = 1;
+      turnOver(WhitePlaceDisc, list, int.parse(X[0]), int.parse(X[1]));
+      for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+          if (list[i][j] == 10) {
+            list[i][j] = -1;
+          }
+        }
+      }
+      BlackPlaceDisc.clear();
       findPlacesDisc(list, BlackPlaceDisc, 0);
 
-      // print(TogglePlaceDisc);
-      // if (a != -1 && b != -1) {
-      //   list[a][b] = (count + 1) % 2;
-      //   // ignore: unrelated_type_equality_checks
-      //   if (TogglePlaceDisc["$a,$b"] != Null) {
-      //     turnOver(TogglePlaceDisc, list, a, b);
-      //   }
-      // }
+      // // print(TogglePlaceDisc);
+      // // if (a != -1 && b != -1) {
+      // //   list[a][b] = (count + 1) % 2;
+      // //   // ignore: unrelated_type_equality_checks
+      // //   if (TogglePlaceDisc["$a,$b"] != Null) {
+      // //     turnOver(TogglePlaceDisc, list, a, b);
+      // //   }
+      // // }
 
-      print(count);
+      // print(count);
 
       count++;
     });

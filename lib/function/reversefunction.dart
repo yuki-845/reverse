@@ -29,7 +29,6 @@ void findPlacesDisc(
     // ignore: non_constant_identifier_names
     Map<String, List<String>> TogglePlaceDisc,
     int disc) {
-  TogglePlaceDisc.clear();
   List<List<int>> dir = [
     [-1, 0],
     [1, 0],
@@ -57,6 +56,7 @@ void findPlacesDisc(
             y += dir[k][1];
 
             if (x >= 0 && x < 8 && y >= 0 && y < 8) {
+              print("$i,$j");
               if (EnemyPlayerDisc == list[x][y] && PlayerCount > 0) {
                 list[i][j] = 10;
                 break;
@@ -70,10 +70,10 @@ void findPlacesDisc(
               PlayerCount++;
               localToggleDisc.add("$x,$y");
             } else {
+              localToggleDisc = [];
               break;
             }
           }
-
           if (localToggleDisc.isNotEmpty) {
             globalToggleDisc.addAll(localToggleDisc);
           }
@@ -84,6 +84,7 @@ void findPlacesDisc(
       }
     }
   }
+  print(list);
 }
 
 // オセロのCPU評価関数
